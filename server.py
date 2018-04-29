@@ -7,6 +7,11 @@ from leds import LEDColor, LEDFactory
 def opt_parse():
     parser = argparse.ArgumentParser()
     parser.add_argument('--num', default=10, type=int)
+
+    feature_parser = parser.add_mutually_exclusive_group(required=False)
+    feature_parser.add_argument('--dev', dest='debug', action='store_true')
+    feature_parser.add_argument('--prod', dest='debug', action='store_false')
+    parser.set_defaults(debug=True)
     return parser.parse_args()
 
 class BaseLEDView(View):
@@ -39,8 +44,9 @@ def render_home():
     return render_template('index.html')
 
 class LEDServer:
-    def __init__(self, size):
+    def __init__(self, size, debug):
         self.app = Flask(__name__)
+        self.debug = debug
         self.ledstrip = LEDFactory.make(size)
 
     def register_views(self):
@@ -51,10 +57,10 @@ class LEDServer:
     def start(self):
         self.ledstrip.setup()
         self.ledstrip.show()
-        self.app.run(host='0.0.0.0', port=3000, debug=True)
+        self.app.run(host='0.0.0.0', port=3000, debug=self.debug)
 
 if __name__ == "__main__":
     args = opt_parse()
-    s = LEDServer(size=args.num)
+    s = LEDServer(size=args.num, debug=args.debug)
     s.register_views()
     s.start()

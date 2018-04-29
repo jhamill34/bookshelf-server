@@ -33,6 +33,12 @@ class LEDPlatform:
         pass
 
     #
+    # @returns a collection of pixels indicating the current state
+    #
+    def getPixelState(self):
+        pass
+
+    #
     # Send signal to show whatever pixel colors have been set
     #
     def show(self):

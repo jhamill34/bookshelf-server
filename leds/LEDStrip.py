@@ -33,6 +33,9 @@ class LEDStrip(LEDPlatform):
     def batchSetPixels(self, pixels, show=False):
         pass
 
+    def getPixelState(self):
+        return self._strip.getPixels()
+
     def show(self):
         self._strip.show()
 
