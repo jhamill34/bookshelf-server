@@ -1,5 +1,11 @@
 import time
+import argparse
 from leds import LEDFactory, LEDColor
+
+def opt_parse():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--num', default=10, type=int)
+    return parser.parse_args()
 
 def wheel(pos):
 	"""Generate rainbow colors across 0-255 positions."""
@@ -37,7 +43,9 @@ def colorWipe(strip, color, wait_ms=50):
 
 
 if __name__ == "__main__":
-    ledstrip = LEDFactory.make(size=20)
+    args = opt_parse()
+
+    ledstrip = LEDFactory.make(size=args.num)
     ledstrip.setup()
 
     colorWipe(ledstrip, LEDColor(255, 0, 0))
