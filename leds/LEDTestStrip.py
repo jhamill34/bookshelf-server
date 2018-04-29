@@ -6,6 +6,7 @@
 import sys
 from LEDPlatform import LEDPlatform
 from LEDColor import LEDColor
+from TerminalColor import TerminalColor
 
 class LEDStrip(LEDPlatform):
     def setup(self):
@@ -24,4 +25,4 @@ class LEDStrip(LEDPlatform):
     def show(self):
         sys.stdout.write('\r')
         for c in self._strip:
-            c.display()
+            TerminalColor(c).display()
