@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Bookshelf Color Picker</title>
+    <style media="screen">
+      #swatch{
+        width: 100px;
+        height: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Pick Color</h1>
+
+    <h2><span id="color-value"></span></h2>
+    <div id="swatch"></div>
+
+    <div class="form-element">
+      <label for="red">Red</label>
+      <input type="range" min="0" max="255" step="1" value="100" id="red" />
+    </div>
+
+    <div class="form-element">
+      <label for="green">Green</label>
+      <input type="range" min="0" max="255" step="1" value="100" id="green" />
+    </div>
+
+    <div class="form-element">
+      <label for="blue">Blue</label>
+      <input type="range" min="0" max="255" step="1" value="100" id="blue" />
+    </div>
+
+    <script type="text/javascript">
+      var red = document.getElementById('red');
+      var green = document.getElementById('green');
+      var blue = document.getElementById('blue');
+
+      var colorValue = document.getElementById('color-value');
+      var swatch = document.getElementById('swatch');
+
+      function convertColorToJSON(r, g, b) {
+        return {
+          'red': parseInt(r),
+          'green': parseInt(g),
+          'blue': parseInt(b)
+        };
+      }
+
+      function convertToRGB() {
+        return `rgb(${red.value}, ${green.value}, ${blue.value})`;
+      }
+
+      function setColorValue() {
+        var cString = convertToRGB();
+        colorValue.innerHTML = cString;
+        swatch.style.backgroundColor = cString;
+      }
+
+      function sendColorRequest(color_json) {
+        fetch('http://localhost:3000/color', {
+          method: 'POST',
+          body: JSON.stringify(color_json),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then((data) => {
+          console.log(data);
+        });
+      }
+
+      function sliderChangeHandler(e) {
+        var color_json = convertColorToJSON(red.value, green.value, blue.value);
+        sendColorRequest(color_json)
+        setColorValue();
+      }
+
+      setColorValue();
+      red.addEventListener('input', sliderChangeHandler);
+      green.addEventListener('input', sliderChangeHandler);
+      blue.addEventListener('input', sliderChangeHandler);
+    </script>
+  </body>
+</html>

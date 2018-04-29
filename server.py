@@ -1,6 +1,6 @@
 import argparse
 import time
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask.views import View
 from leds import LEDColor, LEDFactory
 
@@ -35,12 +35,17 @@ class BatchSetPixelAPI(BaseLEDView):
 
         return 'OK'
 
+def render_home():
+    return render_template('index.html')
+
 class LEDServer:
     def __init__(self, size):
         self.app = Flask(__name__)
         self.ledstrip = LEDFactory.make(size)
 
+
     def register_views(self):
+        self.app.add_url_rule('/', view_func=render_home)
         self.app.add_url_rule('/color/<int:index>', view_func=SetPixelAPI.as_view('set_pixel', strip=self.ledstrip))
         self.app.add_url_rule('/color', view_func=BatchSetPixelAPI.as_view('batch_set_pixel', strip=self.ledstrip))
 
