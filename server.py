@@ -43,7 +43,6 @@ class LEDServer:
         self.app = Flask(__name__)
         self.ledstrip = LEDFactory.make(size)
 
-
     def register_views(self):
         self.app.add_url_rule('/', view_func=render_home)
         self.app.add_url_rule('/color/<int:index>', view_func=SetPixelAPI.as_view('set_pixel', strip=self.ledstrip))
